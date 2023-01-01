@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { json, useLoaderData } from 'react-router-dom'
 import type { LoaderFunction } from 'react-router-dom'
+import { fetchProduct } from '../api/products'
 
 const ProductPage: FC = () => {
   const { product } = useLoaderData() as LoaderData
@@ -11,13 +12,27 @@ const ProductPage: FC = () => {
 export default ProductPage
 
 type LoaderData = {
-  product: object
+  product: NonNullable<Awaited<ReturnType<typeof fetchProduct>>>
 }
 
-export const loader: LoaderFunction = ({ params }) => {
+export const loader: LoaderFunction = async ({ params }) => {
   const { id } = params
 
-  return json<LoaderData>({
-    product: {},
-  })
+  if (id === undefined) {
+    throw new Response('', {
+      status: 404,
+      statusText: `Not found`,
+    })
+  }
+
+  const product = await fetchProduct(Number(id))
+
+  if (product === null) {
+    throw new Response('', {
+      status: 404,
+      statusText: `Not found`,
+    })
+  }
+
+  return json<LoaderData>({ product })
 }

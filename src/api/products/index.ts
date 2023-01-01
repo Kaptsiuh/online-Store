@@ -10,7 +10,7 @@ const API_URL = 'https://dummyjson.com'
 const cache = {} as ResponseDTO
 
 const fetchData = async (): Promise<ResponseDTO> => {
-  if (cache.products.length > 0) {
+  if (cache.products?.length > 0) {
     return cache
   }
 
