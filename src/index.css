@@ -4,6 +4,6 @@
 
 @layer components {
   .container {
-    @apply px-4 max-w-6xl mx-auto;
+    @apply w-[min(90%,/*no space*/1280px)] mx-auto;
   }
 }
