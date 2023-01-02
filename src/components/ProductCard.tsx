@@ -17,7 +17,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
     <div className="rounded-md shadow-lg hover:shadow-2xl bg-white border transition-shadow">
       <Link to={`products/${product.id}`}>
         <img
-          className="w-full aspect-video object-cover hover:opacity-75 rounded-md transition duration-200"
+          className="w-full aspect-video object-cover hover:opacity-75 rounded-md transition"
           src={product.thumbnail}
           alt={product.title}
         />

@@ -23,7 +23,7 @@ const App: FC = () => {
         </div>
       </header>
       <main className="flex-1">
-        <div className="container">
+        <div className="container py-4">
           <Outlet />
         </div>
       </main>
