@@ -1,7 +1,9 @@
 import { FC } from 'react'
 import { Link, Outlet } from 'react-router-dom'
+import { useCartContext } from './context/CartContext'
 
 const App: FC = () => {
+  const { totalCount, totalPrice } = useCartContext()
   return (
     <div className="min-h-screen flex flex-col">
       <header className='shadow'>
@@ -11,10 +13,10 @@ const App: FC = () => {
             <Link to="/">Online Store</Link>
           </h1>
           <div className='flex items-center gap-x-4'>
-            <div>total: <span className='font-medium'>0$</span></div>
+            <div>total: <span className='font-medium'>{totalPrice}$</span></div>
             <Link to="/cart">
               <span className="h-8 w-8 bg-orange-500 flex items-center justify-center rounded-full text-white font-bold">
-                {0}
+                {totalCount}
               </span>
             </Link>
           </div>
