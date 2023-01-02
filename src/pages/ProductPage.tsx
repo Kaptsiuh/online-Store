@@ -1,13 +1,20 @@
-import { FC, useState } from 'react'
+import { FC, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { json, useLoaderData } from 'react-router-dom'
 import type { LoaderFunction } from 'react-router-dom'
 import { fetchProduct } from '../api/products'
+import { useCartContext } from '../context/CartContext'
 
 const ProductPage: FC = () => {
   const { product } = useLoaderData() as LoaderData
+  const { addToCart, dropFromCart, cart } = useCartContext()
 
   const [picture, setPicture] = useState<string>(product.thumbnail)
+
+  const isInCart = useMemo(
+    () => cart.some(({ product: { id } }) => id === product.id),
+    [cart.length]
+  )
 
   const mainImage = <img src={picture} className="w-11/12 rounded-md" alt="product-photo" />
 
@@ -42,9 +49,14 @@ const ProductPage: FC = () => {
           <div className="flex flex-col  w-5/12 rounded-br-xl">
             <div className=" m-2 flex justify-center items-center flex-col">
               <h2 className="text-3xl">{product.price}$</h2>
-              <button className="bg-slate-400 hover:bg-orange-500 m-4 p-2 w-full rounded-md">
-                Add To Cart {/* состояние корзины */}
+
+              <button
+                onClick={!isInCart ? () => addToCart(product) : () => dropFromCart(product)}
+                className="bg-slate-400 hover:bg-orange-500 m-4 p-2 w-full rounded-md"
+              >
+                {isInCart ? 'Drop From Cart' : 'Add To Cart'}
               </button>
+
               <button className="bg-slate-400 hover:bg-orange-500 p-2 w-full rounded-md">
                 BUY NOW
               </button>
