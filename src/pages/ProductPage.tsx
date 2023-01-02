@@ -12,13 +12,21 @@ const ProductPage: FC = () => {
     <img src={product.images[0]} className="w-11/12 rounded-md" alt="product foto" />
   )
 
+  const handleClick = (event) => {
+    // const src = event.target.src;
+    console.log(event)
+    // mainImage = <img src={event} className="w-11/12 rounded-md" alt="product foto" />
+    // mainImage.props.src
+    // console.log(mainImage.props.src)
+  }
+
   const images = product.images.map((e) => (
     <img
       className=" w-11/12 m-2 rounded-md"
       src={e}
       alt="product foto"
       key={e.toString()}
-      // onClick={() => (mainImage = <img src={e} alt="product foto" />)}
+      onClick={() => handleClick(e)}
     />
   ))
 
