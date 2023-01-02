@@ -12,7 +12,7 @@ type CardDescendants = {
 
 const Card: FC<CardProps> & CardDescendants = ({ children }) => {
   return (
-    <div className="flex flex-col items-center rounded-md shadow-lg hover:shadow-2xl bg-white border">
+    <div className="rounded-md shadow-lg hover:shadow-2xl bg-white border transition-shadow">
       {children}
     </div>
   );
@@ -25,13 +25,11 @@ type CardMediaProps = {
 
 const CardMedia: FC<CardMediaProps> = ({ src, alt }) => {
   return (
-    <div>
-      <img
-        className="object-cover hover:opacity-75 rounded-md transition duration-200"
-        src={src}
-        alt={alt}
-      />
-    </div>
+    <img
+      className="w-full aspect-video object-cover hover:opacity-75 rounded-md transition duration-200"
+      src={src}
+      alt={alt}
+    />
   );
 };
 
@@ -41,7 +39,7 @@ type CardContentProps = {
 
 const CardContent: FC<CardContentProps> = ({ children }) => {
   return (
-    <div>{children}</div>
+    <div className='flex flex-col items-center p-3'>{children}</div>
   )
 }
 
@@ -51,7 +49,7 @@ type CardActionsProps = {
 
 const CardActions: FC<CardActionsProps> = ({ children }) => {
   return (
-    <div className="flex items-center justify-between bg-gray-200 rounded-md mb-2 absolute bottom-0 opacity-80 hover:opacity-100 font-bold transition duration-200">
+    <div className='flex flex-col items-center pb-3'>
       {children}
     </div>
   );
