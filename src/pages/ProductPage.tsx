@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { json, useLoaderData } from 'react-router-dom'
 import type { LoaderFunction } from 'react-router-dom'
@@ -7,30 +7,19 @@ import { fetchProduct } from '../api/products'
 const ProductPage: FC = () => {
   const { product } = useLoaderData() as LoaderData
 
-  // console.log(product);
-  const mainImage = (
-    <img src={product.images[0]} className="w-11/12 rounded-md" alt="product foto" />
-  )
+  const [picture, setPicture] = useState<string>(product.thumbnail)
 
-  const handleClick = (event) => {
-    // const src = event.target.src;
-    console.log(event)
-    // mainImage = <img src={event} className="w-11/12 rounded-md" alt="product foto" />
-    // mainImage.props.src
-    // console.log(mainImage.props.src)
-  }
+  const mainImage = <img src={picture} className="w-11/12 rounded-md" alt="product-photo" />
 
-  const images = product.images.map((e) => (
+  const images = product.images.map((path) => (
     <img
       className=" w-11/12 m-2 rounded-md"
-      src={e}
-      alt="product foto"
-      key={e.toString()}
-      onClick={() => handleClick(e)}
+      src={path}
+      alt="product-photo"
+      key={path}
+      onClick={() => setPicture(path)}
     />
   ))
-
-  // console.log(mainImage.props.src);
 
   return (
     <div className="container">
