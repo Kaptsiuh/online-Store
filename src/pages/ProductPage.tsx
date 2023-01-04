@@ -31,7 +31,7 @@ const ProductPage: FC = () => {
   return (
     <div className="container">
       <div className="flex justify-between m-6 text-xl max-md:text-xs">
-        <Link to="/" className="hover:text-orange-500">
+        <Link to="/" className="hover:text-orange-500 transition-colors">
           Store
         </Link>
         <span>/</span>
@@ -58,12 +58,12 @@ const ProductPage: FC = () => {
 
               <button
                 onClick={!isInCart ? () => addToCart(product) : () => dropFromCart(product)}
-                className="bg-gray-800 text-white uppercase hover:bg-orange-500 m-4 p-2 w-full rounded-md"
+                className="bg-gray-800 text-white uppercase hover:bg-orange-500 m-4 p-2 w-full rounded-md transition-colors"
               >
                 {isInCart ? 'Drop From Cart' : 'Add To Cart'}
               </button>
 
-              <button className="bg-gray-800 text-white uppercase hover:bg-orange-500 p-2 w-full rounded-md">
+              <button className="bg-gray-800 text-white uppercase hover:bg-orange-500 p-2 w-full rounded-md transition-colors">
                 BUY NOW
               </button>
             </div>
