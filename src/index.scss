@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .container {
+    @apply w-[min(90%,/*no space*/1280px)] mx-auto;
+  }
+}
