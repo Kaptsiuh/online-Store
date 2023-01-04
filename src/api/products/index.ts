@@ -5,6 +5,9 @@ import type { FilterOptions, Product } from '../../types'
 type ResponseDTO = {
   products: Product[]
   categories: string[]
+  brands: string[]
+  prices: { min: number; max: number }
+  stock: { min: number; max: number }
 }
 
 const API_URL = 'https://dummyjson.com'
@@ -22,6 +25,15 @@ const fetchData = async (): Promise<ResponseDTO> => {
 
   cache.products = products
   cache.categories = [...new Set(products.map((item) => item.category))]
+  cache.brands = [...new Set(products.map((item) => item.brand))]
+  cache.prices = {
+    min: Math.min(...products.map((item) => item.price)),
+    max: Math.max(...products.map((item) => item.price)),
+  }
+  cache.stock = {
+    min: Math.min(...products.map((item) => item.stock)),
+    max: Math.max(...products.map((item) => item.stock)),
+  }
 
   return cache
 }
@@ -53,6 +65,21 @@ export const fetchProduct = async (id: Product['id']): Promise<Product | null> =
 export const fetchCategories = async (): Promise<string[]> => {
   const { categories } = await fetchData()
   return categories
+}
+
+export const fetchBrands = async (): Promise<string[]> => {
+  const { brands } = await fetchData()
+  return brands
+}
+
+export const fetchMinMaxPrice = async () => {
+  const { prices } = await fetchData()
+  return prices
+}
+
+export const fetchMinMaxStock = async () => {
+  const { stock } = await fetchData()
+  return stock
 }
 
 const sortByPredicates: {

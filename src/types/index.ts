@@ -19,7 +19,7 @@ export type FilterOptions = {
   sort: string[]
   category: string[]
   brand: string[]
-  size: string[]
+  view: string[]
   price: string[]
   stock: string[]
 }

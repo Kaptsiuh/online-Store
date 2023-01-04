@@ -13,8 +13,9 @@ type ProductCardProps = {
 
 const ProductCard: FC<ProductCardProps> = (props) => {
   const { product, isInCart, onAddToCart, onDropFromCart } = props
+
   return (
-    <div className="rounded-md shadow-lg hover:shadow-2xl bg-white border transition-shadow">
+    <div className="rounded-md shadow-lg hover:shadow-2xl bg-white border transition-shadow flex flex-col">
       <Link to={`products/${product.id}`}>
         <img
           className="w-full aspect-video object-cover hover:opacity-75 rounded-md transition"
@@ -23,7 +24,7 @@ const ProductCard: FC<ProductCardProps> = (props) => {
         />
       </Link>
       <div className='flex flex-col items-center p-3'>
-        <div className='text-md text-gray-400 capitalize'>
+        <div className='text-md text-gray-400 capitalize text-center'>
           <span>{product.brand}</span>
           <span> | </span>
           <span>{product.category}</span>
@@ -43,9 +44,9 @@ const ProductCard: FC<ProductCardProps> = (props) => {
           )} />
 
         </div>
-        <span>{product.price}$</span>
+        <span className="py-2 font-bold">{product.price}$</span>
       </div>
-      <div className='flex flex-col items-center pb-3'>
+      <div className='flex flex-col items-center pb-3 mt-auto'>
         {isInCart ? (
           <button onClick={onDropFromCart} className='px-4 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded hover:bg-gray-600 transition-colors'>Drop from Cart</button>
         ) : (

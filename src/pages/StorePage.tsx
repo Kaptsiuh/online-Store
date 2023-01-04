@@ -1,4 +1,4 @@
-import { json, useLoaderData } from 'react-router-dom'
+import { json, useLoaderData, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 
 import { FC, useState } from 'react'
@@ -7,17 +7,28 @@ import type { LoaderFunction } from 'react-router-dom'
 import { IoList, IoGrid, IoFilter, IoClose } from "react-icons/io5"
 
 import { useCartContext } from '../context/CartContext'
-import { fetchProducts } from '../api/products'
+import { fetchBrands, fetchCategories, fetchMinMaxPrice, fetchMinMaxStock, fetchProducts } from '../api/products'
+import { useSearchState, prepareParams } from '../hooks/useSearchState'
+import { FilterOptions } from '../types'
+import { sortByOptions } from '../config'
 
 import List from '../components/List'
 import ProductCard from '../components/ProductCard'
+import FilterCard from '../components/FilterCard'
+import FilterControl from '../components/FilterControl'
+import SearchControl from '../components/SearchControl'
+import SelectControl from '../components/SelectControl'
+import RangeControl from '../components/RangeControl'
 
 
 const StorePage: FC = () => {
-  const { products } = useLoaderData() as LoaderData
+  const { products, categories, brands, prices, stock } = useLoaderData() as LoaderData
   const { addToCart, dropFromCart, cart } = useCartContext()
 
+  const [search, setSearch] = useSearchState<FilterOptions>()
+
   const [isOpen, setIsOpen] = useState(true)
+  const navigate = useNavigate()
 
   return (
     <div className='grid grid-cols-1 grid-rows-1 xl:grid-cols-[1fr,4fr] xl:gap-4 overflow-hidden'>
@@ -30,24 +41,102 @@ const StorePage: FC = () => {
 
         <div className='flex-1 bg-white relative'>
           <button className='absolute right-2 top-2 xl:hidden' onClick={() => setIsOpen(false)}><IoClose /></button>
+
+
+          <div className='space-y-4'>
+            <div className='flex gap-x-2 xl:justify-between'>
+              <button onClick={() => navigate('/')} className='button'>reset filters</button>
+              <button onClick={() => navigator.clipboard.writeText(window.location.href)} className='button'>copy link</button>
+            </div>
+            <div className='xl:hidden'>
+              <SelectControl
+                title='Sort Options:'
+                options={sortByOptions}
+                value={search.sort?.toString()}
+                handle={value => setSearch(builder => builder.set('sort', value))} />
+            </div>
+            <FilterCard title='category'>
+              <List items={categories} fn={(value) =>
+                <FilterControl
+                  key={value}
+                  value={value}
+                  selected={Boolean(search.category?.includes(value))}
+                  handle={(checked) =>
+                    setSearch(builder => checked
+                      ? builder.append('category', value)
+                      : builder.remove('category', value))} />}
+              />
+            </FilterCard>
+
+            <FilterCard title='brands'>
+              <List items={brands} fn={(value) =>
+                <FilterControl
+                  key={value}
+                  value={value}
+                  selected={Boolean(search.brand?.includes(value))}
+                  handle={(checked) =>
+                    setSearch(builder => checked
+                      ? builder.append('brand', value)
+                      : builder.remove('brand', value))} />}
+              />
+            </FilterCard>
+
+            <FilterCard title="price">
+              <RangeControl
+                min={prices.min}
+                max={prices.max}
+                minValue={Number(search.price?.at(0) ?? prices.min)}
+                maxValue={Number(search.price?.at(1) ?? prices.max)}
+                handle={(min, max) => {
+                  setSearch((builder) => builder.set('price', [`${min}`, `${max}`]));
+                }}
+              />
+            </FilterCard>
+
+            <FilterCard title="stock">
+              <RangeControl
+                min={stock.min}
+                max={stock.max}
+                minValue={Number(search.stock?.at(0) ?? stock.min)}
+                maxValue={Number(search.stock?.at(1) ?? stock.max)}
+                handle={(min, max) => {
+                  setSearch((builder) => builder.set('stock', [`${min}`, `${max}`]));
+                }}
+              />
+            </FilterCard>
+          </div>
         </div>
       </div>
 
       <div className='col-span-full row-span-full space-y-4 xl:col-auto xl:row-auto'>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between flex-wrap'>
 
           <div>
             <button className='xl:hidden' onClick={() => setIsOpen(true)}><IoFilter /></button>
+            <div className='hidden xl:block'>
+              <SelectControl
+                title='Sort Options:'
+                options={sortByOptions}
+                value={search.sort?.toString()}
+                handle={value => setSearch(builder => builder.set('sort', value))} />
+            </div>
           </div>
 
           <div>Found: <span className='font-bold'>{products.length}</span></div>
 
-          <div className='flex items-center gap-x-3'>
-            <button><IoGrid /></button>
-            <button><IoList /></button>
+          <div className='flex items-center gap-x-4'>
+            <SearchControl value={search.search} handle={(value) => setSearch(builder => builder.set('search', value))} />
+            <div className='flex items-center gap-x-3'>
+              <button
+                onClick={() => setSearch(builder => builder.set("view", "big"))}
+                className='p-1 rounded transition hover:bg-gray-100'><IoGrid /></button>
+              <button
+                onClick={() => setSearch(builder => builder.set("view", "small"))}
+                className='p-1 rounded transition hover:bg-gray-100'><IoList /></button>
+            </div>
           </div>
         </div>
-        <div className='grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3'>
+        <div className={clsx('grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-3', { "grid-cols-[repeat(auto-fit,minmax(200px,1fr))]": search.view?.includes('small') })} >
           <List items={products} fn={(item) => (
             <ProductCard
               key={item.id}
@@ -67,10 +156,21 @@ export default StorePage
 
 type LoaderData = {
   products: Awaited<ReturnType<typeof fetchProducts>>
+  categories: Awaited<ReturnType<typeof fetchCategories>>
+  brands: Awaited<ReturnType<typeof fetchBrands>>
+  prices: Awaited<ReturnType<typeof fetchMinMaxPrice>>
+  stock: Awaited<ReturnType<typeof fetchMinMaxStock>>
+
 }
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const filterParams = prepareParams(new URL(request.url).searchParams)
+
   return json<LoaderData>({
-    products: await fetchProducts(),
+    products: await fetchProducts(filterParams),
+    categories: await fetchCategories(),
+    brands: await fetchBrands(),
+    prices: await fetchMinMaxPrice(),
+    stock: await fetchMinMaxStock()
   })
 }
