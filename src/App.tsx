@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import { useCartContext } from './context/CartContext'
+import { IoCart } from "react-icons/io5"
 
 const App: FC = () => {
   const { totalCount, totalPrice } = useCartContext()
@@ -15,8 +16,8 @@ const App: FC = () => {
             <Link to="/">Online Store</Link>
           </h1>
           <div className="flex items-center gap-x-4 text-white">
-            <div>
-              total: <span className="font-medium">{totalPrice}$</span>
+            <div className='flex items-center'>
+              <IoCart /> <span className="font-medium">{totalPrice}$</span>
             </div>
             <Link to="/cart">
               <span className="h-8 w-8 bg-orange-500 flex items-center justify-center rounded-full font-bold">
