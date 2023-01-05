@@ -21,7 +21,7 @@ const ProductPage: FC = () => {
   )
 
   const handleBuyNow = () => {
-    addToCart(product);
+    !isInCart && addToCart(product);
     navigate("/cart", { state: { openModal: true } })
   }
 
