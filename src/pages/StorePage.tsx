@@ -156,7 +156,7 @@ const StorePage: FC = () => {
 
           <div className='flex items-center gap-x-4'>
             <SearchControl value={search.search} handle={(value) => setSearch(builder => builder.set('search', value))} />
-            <div className='flex items-center gap-x-3'>
+            <div className='hidden sm:flex items-center gap-x-3'>
               <button
                 onClick={() => setSearch(builder => builder.set("view", "big"))}
                 className='p-1 rounded transition hover:bg-gray-100'><IoGrid /></button>
