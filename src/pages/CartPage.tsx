@@ -5,6 +5,7 @@ import List from '../components/List'
 import Popup from '../components/Popup'
 import { useCartContext } from '../context/CartContext'
 import { IoAdd, IoRemove } from 'react-icons/io5'
+import BuyForm from '../components/BuyForm'
 
 const CartPage: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -56,7 +57,7 @@ const CartPage: FC = () => {
         <div>Products: {totalCount}</div>
         <button onClick={() => setIsOpen(() => true)}>Buy Now</button>
         <Popup isOpen={isOpen} onClose={() => setIsOpen(() => false)}>
-          By Form
+          <BuyForm />
         </Popup>
       </div>
     </div>
