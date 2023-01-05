@@ -1,7 +1,9 @@
-import { FC, useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import { json, useLoaderData } from 'react-router-dom'
+import { useState, useMemo } from 'react'
+import { Link, useNavigate, json, useLoaderData } from 'react-router-dom'
+
 import type { LoaderFunction } from 'react-router-dom'
+import type { FC } from "react"
+
 import { fetchProduct } from '../api/products'
 import { useCartContext } from '../context/CartContext'
 
@@ -9,12 +11,19 @@ const ProductPage: FC = () => {
   const { product } = useLoaderData() as LoaderData
   const { addToCart, dropFromCart, cart } = useCartContext()
 
+  const navigate = useNavigate()
+
   const [picture, setPicture] = useState<string>(product.thumbnail)
 
   const isInCart = useMemo(
     () => cart.some(({ product: { id } }) => id === product.id),
     [cart.length]
   )
+
+  const handleBuyNow = () => {
+    addToCart(product);
+    navigate("/cart", { state: { openModal: true } })
+  }
 
   const mainImage = <img src={picture} className="w-11/12 rounded-md" alt="product-photo" />
 
@@ -55,7 +64,6 @@ const ProductPage: FC = () => {
           <div className="flex flex-col  w-5/12 rounded-br-xl max-md:w-full">
             <div className=" m-2 flex justify-center items-center flex-col">
               <h2 className="text-3xl">{product.price}$</h2>
-
               <button
                 onClick={!isInCart ? () => addToCart(product) : () => dropFromCart(product)}
                 className="bg-gray-800 text-white uppercase hover:bg-orange-500 m-4 p-2 w-full rounded-md transition-colors"
@@ -63,10 +71,11 @@ const ProductPage: FC = () => {
                 {isInCart ? 'Drop From Cart' : 'Add To Cart'}
               </button>
 
-              <button className="bg-gray-800 text-white uppercase hover:bg-orange-500 p-2 w-full rounded-md transition-colors">
+              <button onClick={handleBuyNow} className="bg-gray-800 text-white uppercase hover:bg-orange-500 p-2 w-full rounded-md transition-colors">
                 BUY NOW
               </button>
             </div>
+
             <h2 className="bg-gray-100 mt-4 m-2 rounded-md text-center">
               <p className="bg-gray-400 rounded-t-md">Description:</p>
               {product.description}
