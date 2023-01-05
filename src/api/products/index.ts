@@ -4,8 +4,8 @@ import type { FilterOptions, Product } from '../../types'
 
 type ResponseDTO = {
   products: Product[]
-  categories: string[]
-  brands: string[]
+  categories: Record<string, number>
+  brands: Record<string, number>
   prices: { min: number; max: number }
   stock: { min: number; max: number }
 }
@@ -24,8 +24,25 @@ const fetchData = async (): Promise<ResponseDTO> => {
   )
 
   cache.products = products
-  cache.categories = [...new Set(products.map((item) => item.category))]
-  cache.brands = [...new Set(products.map((item) => item.brand))]
+
+  cache.categories = products.reduce<Record<string, number>>((initial, item) => {
+    if (!isNaN(initial[item.category])) {
+      initial[item.category] += 1
+    } else {
+      initial[item.category] = 1
+    }
+    return initial
+  }, {})
+
+  cache.brands = products.reduce<Record<string, number>>((initial, item) => {
+    if (!isNaN(initial[item.brand])) {
+      initial[item.brand] += 1
+    } else {
+      initial[item.brand] = 1
+    }
+    return initial
+  }, {})
+
   cache.prices = {
     min: Math.min(...products.map((item) => item.price)),
     max: Math.max(...products.map((item) => item.price)),
@@ -62,12 +79,12 @@ export const fetchProduct = async (id: Product['id']): Promise<Product | null> =
   return products.find((item) => item.id === id) ?? null
 }
 
-export const fetchCategories = async (): Promise<string[]> => {
+export const fetchCategories = async (): Promise<Record<string, number>> => {
   const { categories } = await fetchData()
   return categories
 }
 
-export const fetchBrands = async (): Promise<string[]> => {
+export const fetchBrands = async (): Promise<Record<string, number>> => {
   const { brands } = await fetchData()
   return brands
 }
