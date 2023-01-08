@@ -14,6 +14,12 @@ export type Product = {
   images: string[]
 }
 
+export type Promo = {
+  id: string
+  name: string
+  disc: number
+}
+
 export type FilterOptions = {
   search: string[]
   sort: string[]

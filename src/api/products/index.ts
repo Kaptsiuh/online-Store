@@ -1,5 +1,5 @@
 import { request } from '../request'
-import { SortBy } from '../../types'
+import { Promo, SortBy } from '../../types'
 import type { FilterOptions, Product } from '../../types'
 
 type ResponseDTO = {
@@ -97,6 +97,14 @@ export const fetchMinMaxPrice = async () => {
 export const fetchMinMaxStock = async () => {
   const { stock } = await fetchData()
   return stock
+}
+
+export const checkPromoCode = async (id: Promo['id']): Promise<Promo | null> => {
+  const promos = [
+    { id: 'rs', name: 'Rolling Scopes School', disc: 10 },
+    { id: 'epm', name: 'EPAM Systems', disc: 10 },
+  ]
+  return promos.find((item) => item.id === id) ?? null
 }
 
 const sortByPredicates: {
