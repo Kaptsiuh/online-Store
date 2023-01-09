@@ -1,10 +1,22 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Form } from 'react-router-dom'
 import { formatter } from '../utilities/formatter'
 
+import { FaCcMastercard, FaCcVisa, FaCreditCard } from "react-icons/fa"
 
+
+const cards = [
+  { pattern: /^4/, icon: <FaCcVisa /> },
+  { pattern: /^5/, icon: <FaCcMastercard /> },
+]
+
+const handleCCIcon = (value: string) => {
+  return cards.find((card) => card.pattern.test(value))?.icon ?? <FaCreditCard />
+}
 
 const BuyForm: FC = () => {
+  const [cc, setCc] = useState("");
+
   return (
     <Form
       autoComplete='off'
@@ -16,7 +28,7 @@ const BuyForm: FC = () => {
         <div>
           <label
             htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email*</label>
           <input
             type="email"
             id="email"
@@ -29,39 +41,53 @@ const BuyForm: FC = () => {
         <div>
           <label
             htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name*</label>
           <input
             type="text"
+            autoComplete='none'
             id="name"
-            className="form-control"
-            placeholder="name"
+            className="form-control peer"
+            placeholder="Full Name"
+            pattern='^\b[A-Za-z]{3,}\b(?: \b[A-Za-z]{3,}\b){1,}$'
             required />
+          <span className='ml-1 invisible peer-focus-visible:peer-invalid:visible text-red-600 text-xs'>
+            must contain at least 2 words 3 chars each.
+          </span>
         </div>
 
         <div>
           <label
             htmlFor="phone"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number*</label>
           <input
             type="tel"
             id="phone"
-            className="form-control"
+            inputMode='numeric'
+            className="form-control peer"
             placeholder="(012) 345-6789"
-            pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+            pattern="\+ \([0-9]{3}\) [0-9]{3}-[0-9]{3,12}"
             onChange={e => e.target.value = formatter.tel(e.target.value)}
             required />
+          <span className='ml-1 invisible peer-focus-visible:peer-invalid:visible text-red-600 text-xs'>
+            only numbers are allowed. 9-12 chars length
+          </span>
         </div>
 
         <div>
           <label
             htmlFor="address"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Address</label>
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Address*</label>
           <input
             type="text"
             id="address"
-            className="form-control"
-            placeholder="address"
+            autoComplete='none'
+            className="form-control peer"
+            placeholder="Address"
+            pattern='^\b[\w ]{5,}\b(?: \b[\w ]{5,}\b){2,}$'
             required />
+          <span className='ml-1 invisible peer-focus-visible:peer-invalid:visible text-red-600 text-xs'>
+            must contain at least 3 words 5 chars each.
+          </span>
         </div>
       </div>
 
@@ -71,7 +97,9 @@ const BuyForm: FC = () => {
       </h3>
       <div className="w-[90%] bg-gradient-to-r from-gray-500 to-gray-300 rounded-xl px-4 py-6 space-y-6">
         <div className="flex items-center gap-x-4">
-          <div className='bg-white rounded-md flex items-center justify-center px-2 py-1'>logo</div>
+          <div className='rounded flex items-center justify-center p-1 text-4xl text-white'>
+            {handleCCIcon(cc)}
+          </div>
 
           <input
             type="tel"
@@ -80,8 +108,9 @@ const BuyForm: FC = () => {
             id="address"
             className="form-control py-1.5"
             placeholder="0000 0000 0000 0000"
-            pattern='([0-9]{4}) ([0-9]{4}) ([0-9]{4} [0-9]{4})'
-            onChange={e => e.target.value = formatter.cc(e.target.value)}
+            pattern='([0-9]{4}) ([0-9]{4}) ([0-9]{4}) ([0-9]{4})'
+            onChange={e => setCc(e.target.value)}
+            value={formatter.cc(cc)}
             required />
         </div>
         <div className="flex items-center justify-center gap-x-2">
@@ -94,6 +123,7 @@ const BuyForm: FC = () => {
             inputMode='numeric'
             placeholder="MM/YY"
             pattern="(0[1-9]|1[012])/[0-9]{2}"
+            onChange={e => e.target.value = formatter.ccthro(e.target.value)}
             required
             className="form-control py-1.5"
           />
@@ -107,6 +137,7 @@ const BuyForm: FC = () => {
             placeholder="000"
             pattern="[0-9]{3}"
             required
+            onChange={e => e.target.value = formatter.cccvv(e.target.value)}
             className="form-control py-1.5"
           />
         </div>
