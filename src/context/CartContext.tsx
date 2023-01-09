@@ -28,6 +28,7 @@ type CartContextValue = {
   addToCart: (product: Product) => void;
   removeFromCart: (product: Product) => void;
   dropFromCart: (product: Product) => void;
+  clearCart: () => void;
   applyPromo: (promo: PromoItem) => void;
   cancelPromo: (promo: PromoItem) => void;
 };
@@ -42,15 +43,18 @@ enum ActionTypes {
   ADD_TO_CART = 'ADD_TO_CART',
   REMOVE_FROM_CART = 'REMOVE_FROM_CART',
   APPLY_PROMO = 'APPLY_PROMO',
-  CANCEL_PROMO = 'CANCEL_PROMO'
+  CANCEL_PROMO = 'CANCEL_PROMO',
+  CLEAR_CART = 'CLEAR_CART'
 }
 
 type CartAction =
   | { type: ActionTypes.ADD_TO_CART; payload: CartItem[] }
   | { type: ActionTypes.REMOVE_FROM_CART; payload: CartItem[] }
   | { type: ActionTypes.INIT_CART; payload: CartState }
+  | { type: ActionTypes.CLEAR_CART; payload: CartState }
   | { type: ActionTypes.APPLY_PROMO; payload: PromoItem[] }
   | { type: ActionTypes.CANCEL_PROMO; payload: PromoItem[] }
+
 
 
 const CartContext = createContext<CartContextValue>({} as CartContextValue);
@@ -67,11 +71,12 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
       return { ...state, cart: payload };
     case ActionTypes.INIT_CART:
       return payload;
+    case ActionTypes.CLEAR_CART:
+      return payload;
     case ActionTypes.APPLY_PROMO:
       return { ...state, promos: payload };
     case ActionTypes.CANCEL_PROMO:
       return { ...state, promos: payload };
-
     default:
       return state;
   }
@@ -138,6 +143,13 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
     });
   }
 
+  const clearCart = () => {
+    dispatch({
+      type: ActionTypes.CLEAR_CART,
+      payload: { cart: [], promos: [] }
+    })
+  }
+
   const totalPrice = useMemo(
     () => state.cart.reduce((sum, item) => sum + item.count * item.product.price, 0),
     [state.cart]
@@ -162,7 +174,7 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
 
   return (
     <CartContext.Provider
-      value={{ ...state, totalPrice, totalCount, addToCart, removeFromCart, dropFromCart, applyPromo, cancelPromo }}
+      value={{ ...state, totalPrice, totalCount, addToCart, removeFromCart, dropFromCart, applyPromo, cancelPromo, clearCart }}
     >
       {children}
     </CartContext.Provider>
