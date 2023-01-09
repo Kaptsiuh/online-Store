@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useCartContext } from '../context/CartContext'
 
 import List from '../components/List'
@@ -11,6 +11,7 @@ import CartPromoForm from '../components/CartPromoForm'
 
 const CartPage: FC = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [isOpen, setIsOpen] = useState<boolean>(location.state?.openModal ?? false)
 
@@ -24,6 +25,15 @@ const CartPage: FC = () => {
     applyPromo,
     cancelPromo
   } = useCartContext()
+
+  if (cart.length === 0) {
+    return (
+      <div className='flex flex-col items-center py-4 gap-y-3'>
+        <div className='text-xl font-medium'>Cart is Empty</div>
+        <button className='button' onClick={() => navigate('/')}>to Catalog</button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4 xl:grid xl:grid-cols-[5fr_2fr] xl:gap-x-4">
