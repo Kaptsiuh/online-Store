@@ -129,5 +129,9 @@ const filterPredicates: {
     item.stock >= Number(value[0]) && item.stock <= Number(value[1]),
   search: (item: Product, value: string[]) =>
     item.title.toLowerCase().includes(value.toString().toLowerCase()) ||
-    item.description.toLowerCase().includes(value.toString().toLowerCase()),
+    item.description.toLowerCase().includes(value.toString().toLowerCase()) ||
+    item.stock.toString().toLowerCase().includes(value.toString().toLowerCase()) ||
+    item.price.toString().toLowerCase().includes(value.toString().toLowerCase()) ||
+    item.category.toLowerCase().includes(value.toString().toLowerCase()) ||
+    item.brand.toLowerCase().includes(value.toString().toLowerCase()),
 }
