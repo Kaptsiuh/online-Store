@@ -234,7 +234,10 @@ const StorePage: FC = () => {
             />
           </div>
         ) : (
-          <div>Products Not Found</div>
+          <div className='flex flex-col items-center py-4'>
+            <h2 className='text-2xl font-medium text-gray-500'>Products Not Found</h2>
+            <span className='text-gray-400 font-medium'>change or reset filter settings</span>
+          </div>
         )}
       </div>
     </div>

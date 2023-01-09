@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Link, Outlet } from 'react-router-dom'
 import { useCartContext } from './context/CartContext'
 import { IoCart } from 'react-icons/io5'
+import { GoMarkGithub } from 'react-icons/go'
 
 const App: FC = () => {
   const { totalCount, totalPrice } = useCartContext()
@@ -40,17 +41,17 @@ const App: FC = () => {
           <div className='flex'>
             <a
               href='https://github.com/Kaptsiuh'
-              className='flex m-4 items-center hover:text-orange-500 transition-colors'
+              className='flex m-4 items-center hover:text-orange-500 transition-colors gap-2'
             >
-              <img src='../src/assets/github.svg' alt='github' className='w-6 m-2' />
-              <p>Kaptsiuh</p>
+              <GoMarkGithub className='text-2xl' />
+              <span>Kaptsiuh</span>
             </a>
             <a
               href='https://github.com/kovalev-ds'
-              className='flex m-4 items-center hover:text-orange-500 transition-colors'
+              className='flex m-4 items-center hover:text-orange-500 transition-colors gap-2'
             >
-              <img src='../src/assets/github.svg' alt='github' className='w-6 m-2' />
-              kovalev-ds
+              <GoMarkGithub className='text-2xl' />
+              <span>kovalev-ds</span>
             </a>
           </div>
           <div>© Online Store 2022</div>

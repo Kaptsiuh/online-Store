@@ -30,8 +30,8 @@ const CartPage: FC = () => {
     return (
       <div className='flex flex-col items-center py-4 gap-y-3'>
         <div className='text-xl font-medium'>Cart is Empty</div>
-        <button className='button' onClick={() => navigate('/')}>
-          to Catalog
+        <button className='button' onClick={() => navigate(-1)}>
+          Go Back
         </button>
       </div>
     )
