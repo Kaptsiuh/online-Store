@@ -3,6 +3,8 @@ import React, { createContext, useContext, useEffect, useReducer, useMemo } from
 import type { FC, Reducer } from 'react'
 import type { Product, Promo } from '../types'
 
+const STORAGE_KEY = 'kapsiuh-kovalev-ds-cart'
+
 type CartProviderProps = {
   children: React.ReactNode
 }
@@ -154,7 +156,7 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
   )
 
   useEffect(() => {
-    const cart = localStorage.getItem('kapsiuh-kovalev-ds-cart')
+    const cart = localStorage.getItem(STORAGE_KEY)
 
     if (cart !== null) {
       dispatch({ type: ActionTypes.INIT_CART, payload: JSON.parse(cart) })
@@ -162,7 +164,7 @@ const CartProvider: FC<CartProviderProps> = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(state))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   }, [state])
 
   return (
