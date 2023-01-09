@@ -25,8 +25,13 @@ const CartItem: FC<CartItemProps> = (props) => {
             className="h-28 aspect-video object-cover"
           />
           <div className="flex-1">
-            <h1 className="text-xl font-medium">{product.title}</h1>
-            <p className="mb-2">{product.description}</p>
+            <div className="flex flex-col mb-1">
+              <h1 className="text-xl font-medium">{product.title}</h1>
+              <span className="text-xs capitalize text-gray-500 font-medium">
+                {product.category} | {product.brand}
+              </span>
+            </div>
+            <p className="mb-1">{product.description}</p>
             <div className="text-gray-600 text-sm font-medium flex items-center justify-between md:flex-col md:items-start">
               <span>Rating: {product.rating}</span>
               <span>Discount: {product.discountPercentage}</span>
