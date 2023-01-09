@@ -23,29 +23,30 @@ const CartPage: FC = () => {
     removeFromCart,
     promos,
     applyPromo,
-    cancelPromo
+    cancelPromo,
   } = useCartContext()
 
   if (cart.length === 0) {
     return (
       <div className='flex flex-col items-center py-4 gap-y-3'>
         <div className='text-xl font-medium'>Cart is Empty</div>
-        <button className='button' onClick={() => navigate('/')}>to Catalog</button>
+        <button className='button' onClick={() => navigate('/')}>
+          to Catalog
+        </button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4 xl:grid xl:grid-cols-[5fr_2fr] xl:gap-x-4">
-      <div className="space-y-2">
-        <div className="flex items-center">
-          <h2 className="mr-auto">Products in Cart:</h2>
-
+    <div className='space-y-4 xl:grid xl:grid-cols-[5fr_2fr] xl:gap-x-4'>
+      <div className='space-y-2'>
+        <div className='flex items-center'>
+          <h2 className='mr-auto'>Products in Cart:</h2>
         </div>
-        <div className="space-y-2">
+        <div className='space-y-2'>
           <List
             items={cart}
-            fn={({ product, count }, i) =>
+            fn={({ product, count }, i) => (
               <CartItem
                 key={product.id}
                 product={product}
@@ -53,7 +54,8 @@ const CartPage: FC = () => {
                 onAdd={() => addToCart(product)}
                 onRemove={() => removeFromCart(product)}
                 info={<div>{i + 1}</div>}
-              />}
+              />
+            )}
           />
         </div>
       </div>
@@ -75,4 +77,3 @@ const CartPage: FC = () => {
 }
 
 export default CartPage
-
