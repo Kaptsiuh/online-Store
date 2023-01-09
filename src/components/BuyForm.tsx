@@ -1,71 +1,120 @@
 import { FC } from 'react'
+import { Form } from 'react-router-dom'
+import { formatter } from '../utilities/formatter'
+
+
 
 const BuyForm: FC = () => {
   return (
-    <form
-      action=""
-      className="min-w-[440px] min-h-[560px] bg-white rounded-2xl border border-black border-opacity-10 shadow flex flex-col items-center"
+    <Form
+      autoComplete='off'
+      action="order"
+      className="min-w-[440px] py-2 px-6 bg-white rounded-2xl border border-black border-opacity-10 shadow flex flex-col items-center"
     >
-      <label htmlFor="" className="mt-2 mb-2">
-        Personal details
-      </label>
-      <input
-        type="text"
-        placeholder="Name"
-        className="bg-white w-4/5 rounded-md mb-4 text-center"
-      />
-      <input
-        type="tel"
-        placeholder="Phone number"
-        className="bg-white w-4/5 rounded-md mb-4 text-center"
-      />
-      <input
-        type="text"
-        placeholder="Delivery address"
-        className="bg-white w-4/5 rounded-md mb-4 text-center"
-      />
-      <input
-        type="email"
-        placeholder="E-mail"
-        className="bg-white w-4/5 rounded-md mb-4 text-center"
-      />
-      <label htmlFor="" className="mb-2">
-        Credit card details
-      </label>
-      <div className="w-3/4 h-40 bg-gradient-to-r from-gray-500 to-gray-300  rounded-xl mb-6">
-        <div className="flex">
-          <div className="min-w-[40px] h-8 bg-white rounded-md mt-6 mx-2 flex items-center justify-center">
-            <span>logo</span>
-          </div>
+      <h2 className='text-xl font-medium my-4'>Contact Form</h2>
+      <div className='space-y-2 w-full mb-2'>
+        <div>
+          <label
+            htmlFor="email"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
           <input
-            type="number"
-            placeholder="Card number"
-            className="bg-white w-4/5 h-8 rounded-md mt-6 mb-4 text-center"
-          />
+            type="email"
+            id="email"
+            className="form-control"
+            placeholder="name@email.com"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+            required />
         </div>
-        <div className="flex items-center justify-center">
-          <label htmlFor="" className="mt-2 mr-1">
+
+        <div>
+          <label
+            htmlFor="name"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your name</label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            placeholder="name"
+            required />
+        </div>
+
+        <div>
+          <label
+            htmlFor="phone"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            className="form-control"
+            placeholder="(012) 345-6789"
+            pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}"
+            onChange={e => e.target.value = formatter.tel(e.target.value)}
+            required />
+        </div>
+
+        <div>
+          <label
+            htmlFor="address"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Delivery Address</label>
+          <input
+            type="text"
+            id="address"
+            className="form-control"
+            placeholder="address"
+            required />
+        </div>
+      </div>
+
+
+      <h3 className="text-lg font-medium my-3">
+        Credit card details
+      </h3>
+      <div className="w-[90%] bg-gradient-to-r from-gray-500 to-gray-300 rounded-xl px-4 py-6 space-y-6">
+        <div className="flex items-center gap-x-4">
+          <div className='bg-white rounded-md flex items-center justify-center px-2 py-1'>logo</div>
+
+          <input
+            type="tel"
+            inputMode='numeric'
+            name='cc'
+            id="address"
+            className="form-control py-1.5"
+            placeholder="0000 0000 0000 0000"
+            pattern='([0-9]{4}) ([0-9]{4}) ([0-9]{4} [0-9]{4})'
+            onChange={e => e.target.value = formatter.cc(e.target.value)}
+            required />
+        </div>
+        <div className="flex items-center justify-center gap-x-2">
+          <label htmlFor="cc-valid">
             VALID:
           </label>
           <input
-            type="namber"
-            placeholder="Valid Thru"
-            className="bg-white w-[100px] h-6 rounded-md mt-6 mb-4 text-center"
+            id='cc-valid'
+            type="text"
+            inputMode='numeric'
+            placeholder="MM/YY"
+            pattern="(0[1-9]|1[012])/[0-9]{2}"
+            required
+            className="form-control py-1.5"
           />
-          <label htmlFor="" className="mt-2 mr-1 ml-4">
+          <label htmlFor="cvv" >
             CVV:
           </label>
           <input
-            type="number"
-            placeholder="Code"
-            className="bg-white w-[80px] h-6 rounded-md mt-6 mb-4 text-center"
+            id='cvv'
+            type="text"
+            inputMode='numeric'
+            placeholder="000"
+            pattern="[0-9]{3}"
+            required
+            className="form-control py-1.5"
           />
         </div>
       </div>
-      <button className="bg-gray-400 w-2/4  rounded-md h-10 hover:bg-orange-500 transition">
+      <button className="button w-3/4 my-6">
         Confirm
       </button>
-    </form>
+    </Form>
   )
 }
 
